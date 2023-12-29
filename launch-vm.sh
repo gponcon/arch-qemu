@@ -54,7 +54,7 @@ while getopts "v:s:ie" option ;do
 		esac
 done
 
-if [ $INSTALL -eq 1 ] ;then
+if [ "$INSTALL" == "1" ] ;then
 	if [ "$ARCH_VM_ISO" == "" ] ;then
   		ARCH_VM_ISO='archlinux.iso'
 	fi

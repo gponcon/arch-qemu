@@ -5,6 +5,7 @@
 # TODO: more env vars (pkg dir, fullscreen, etc.)
 
 SCRIPT_DIR="$( cd -- "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
+BIOS=''
 
 while getopts "d:i:seh" option ;do
 	case "${option}" in
