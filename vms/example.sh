@@ -24,4 +24,4 @@ if [ $ARCH_VM_EFI -eq 1 ] ;then
   VM_EFI='-e'
 fi
 
-sh "$VMS_DIR/../launch-vm.sh" -v "$VM_NAME" -s "$ARCH_VM_SIZE" $VM_INSTALL $VM_EFI  
+sh "$VMS_DIR/../launch-vm.sh" -s "$ARCH_VM_SIZE" -v "$VM_NAME" $VM_INSTALL $VM_EFI
