@@ -1,0 +1,7 @@
+vms/*
+!vms/example.sh
+iso/*
+!iso/README.md
+pkg/*
+!pkg/README.md
+.env
