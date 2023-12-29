@@ -1,5 +1,11 @@
 #!/bin/sh
 
+# By Guillaume Ponçon
+# TODO: auto-detect host hardware limits (cpu, ram...)
+# TODO: more env vars (pkg dir, fullscreen, etc.)
+
+SCRIPT_DIR="$( cd -- "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
+
 while getopts "d:i:seh" option ;do
 	case "${option}" in
 		s)
@@ -51,7 +57,7 @@ fi
 
 echo "-> Launching VM..."
 qemu-system-x86_64 $IMG \
-	-m 8G \
+	-m 4G \
 	-accel kvm \
 	-cpu host \
 	-smp cores=2,threads=2,sockets=1,maxcpus=4 \
@@ -61,6 +67,6 @@ qemu-system-x86_64 $IMG \
 	-netdev user,id=net0,hostfwd=tcp::2222-:22 \
 	-drive file=$DISK,format=qcow2 \
 	-device virtio-serial -chardev spicevmc,id=spicechannel0,name=vdagent \
-	-fsdev local,security_model=mapped,id=fsdev0,path=/var/cache/shared-pacman-pkg \
-	-device virtio-9p-pci,id=fs0,fsdev=fsdev0,mount_tag=shpkg \
+	-fsdev local,security_model=mapped,id=fsdev0,path="$SCRIPT_DIR/pkg" \
+	-device virtio-9p-pci,id=fs0,fsdev=fsdev0,mount_tag=pkg \
 	$BIOS 

@@ -35,6 +35,23 @@ First time is install by default. To force re-install:
 ./my-vm.sh -i
 ```
 
+## Package cache usage in guest machines
+
+In the Arch live system:
+
+```sh
+mount -t 9p pkg /var/cache/pacman/pkg
+```
+
+In /etc/fstab of guest machines:
+
+```conf
+# Shared packages cache
+pkg /var/cache/pacman/pkg 9p trans=virtio,version=9p2000.L 0 0
+```
+
+In the Arch guest machine
+
 ## Optimized "qemu.sh" script usage
 
 ```sh
