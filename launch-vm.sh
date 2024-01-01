@@ -2,7 +2,6 @@
 
 SCRIPT_DIR="$( cd -- "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
 VMS_DIR=$SCRIPT_DIR'/vms'
-UEFI_BIOS_FILE='/usr/share/ovmf/x64/OVMF.fd'
 
 set -o allexport
 source "$SCRIPT_DIR"'/.env' set
@@ -35,13 +34,8 @@ while getopts "v:s:ie" option ;do
 			ARCH_VM_SIZE=${OPTARG}
 			;;
 		e) 
-			if [ ! -f "$UEFI_BIOS_FILE" ] ;then
-				echo "UEFI bios file '$UEFI_BIOS_FILE' not found."
-				echo "Unable to boot with UEFI bios option."
-				exit 1
-			fi
-  			echo "UEFI mode..."
-			BIOS='-e'
+			echo "UEFI mode selected..."
+			BIOS=' -e'
 			;;
 		\?)
 			echo "Invalid option: -$OPTARG" >&2
@@ -68,7 +62,7 @@ if [ "$INSTALL" == "1" ] ;then
   		echo "Installation aborted"
   		exit 1
 	fi
-	IMG='-i '"$ARCH_VM_ISO"
+	IMG=' -i '"$ARCH_VM_ISO"
 fi
 
-"$SCRIPT_DIR/qemu.sh" -d "$QCOW_FILE" "$IMG" "$BIOS"
+"$SCRIPT_DIR/qemu.sh"$BIOS$IMG -d "$QCOW_FILE"

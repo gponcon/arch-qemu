@@ -4,6 +4,8 @@
 # TODO: auto-detect host hardware limits (cpu, ram...)
 # TODO: more env vars (pkg dir, fullscreen, etc.)
 
+UEFI_BIOS_FILE='/usr/share/ovmf/x64/OVMF.fd'
+
 SCRIPT_DIR="$( cd -- "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
 BIOS=''
 
@@ -20,10 +22,10 @@ while getopts "d:i:seh" option ;do
 			;;
 		d)
 			disk=${OPTARG}
-			if [ -f $disk ] ;then
+			if [ -f "$disk" ] ;then
 				DISK=$disk
 			else
-				echo "VM disk file not found"
+				echo "VM disk '$disk' file not found"
 				exit 1
 			fi
 			;;
@@ -37,7 +39,13 @@ while getopts "d:i:seh" option ;do
 			fi
 			;;
 		e) 
-			BIOS='-bios /usr/share/ovmf/x64/OVMF.fd'
+		    echo "Adding EFI bios..."
+			if [ ! -f "$UEFI_BIOS_FILE" ] ;then
+				echo "UEFI bios file '$UEFI_BIOS_FILE' not found."
+				echo "Unable to boot with UEFI bios option."
+				exit 1
+			fi
+			BIOS='-bios '"$UEFI_BIOS_FILE"
 			;;
 		\?)
 			echo "Invalid option: -$OPTARG" >&2
