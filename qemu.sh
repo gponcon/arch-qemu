@@ -70,12 +70,16 @@ qemu-system-x86_64 $IMG \
 	-accel kvm \
 	-cpu host \
 	-smp cores=2,threads=2,sockets=1,maxcpus=4 \
-	-device virtio-vga,edid=on,xres=1920,yres=1080 \
+	-display sdl \
+	-device qxl-vga,xres=1920,yres=1080 \
 	-full-screen \
 	-device virtio-net,netdev=net0 \
 	-netdev user,id=net0,hostfwd=tcp::2222-:22 \
-	-drive file=$DISK,format=qcow2 \
+	-drive file=$DISK,format=qcow2,if=virtio \
 	-device virtio-serial -chardev spicevmc,id=spicechannel0,name=vdagent \
-	-fsdev local,security_model=mapped,id=fsdev0,path="$SCRIPT_DIR/pkg" \
+	-fsdev local,security_model=mapped,id=fsdev0,path="/var/cache/pacman/pkg" \
 	-device virtio-9p-pci,id=fs0,fsdev=fsdev0,mount_tag=pkg \
 	$BIOS 
+
+	#-device virtio-vga,edid=on,xres=1920,yres=1080 \
+	#-device qxl-vga,xres=1920,yres=1080 \
