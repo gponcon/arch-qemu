@@ -5,8 +5,6 @@
 # TODO: more env vars (pkg dir, fullscreen, etc.)
 
 UEFI_BIOS_FILE='/usr/share/ovmf/x64/OVMF.fd'
-
-SCRIPT_DIR="$( cd -- "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
 BIOS=''
 
 while getopts "d:i:seh" option ;do
@@ -81,5 +79,5 @@ qemu-system-x86_64 $IMG \
 	-device virtio-9p-pci,id=fs0,fsdev=fsdev0,mount_tag=pkg \
 	$BIOS 
 
-	#-device virtio-vga,edid=on,xres=1920,yres=1080 \
-	#-device qxl-vga,xres=1920,yres=1080 \
+# Replace QXL by... if possible :
+# -device virtio-vga,edid=on,xres=1920,yres=1080 \
