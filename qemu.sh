@@ -5,13 +5,15 @@
 # TODO: more env vars (pkg dir, fullscreen, etc.)
 
 UEFI_BIOS_FILE='/usr/share/ovmf/x64/OVMF.fd'
+DISPLAY_TYPE='std' # std or sdl
+
 BIOS=''
 
 while getopts "d:i:seh" option ;do
 	case "${option}" in
 		s)
 			echo "-> Killing VMs..."
-			killall --signal 15 --wait qemu-system-x86_64 
+			killall --signal 15 --wait qemu-system-x86_64
 			exit 0
 			;;
 		h)
@@ -36,7 +38,7 @@ while getopts "d:i:seh" option ;do
 				exit 1
 			fi
 			;;
-		e) 
+		e)
 		    echo "Adding EFI bios..."
 			if [ ! -f "$UEFI_BIOS_FILE" ] ;then
 				echo "UEFI bios file '$UEFI_BIOS_FILE' not found."
@@ -62,6 +64,8 @@ if [ -z "$disk" ]; then
 	exit 1
 fi
 
+# -display : gtk (good display) or sdl (immertion)
+
 echo "-> Launching VM..."
 qemu-system-x86_64 $IMG \
 	-m 4G \
@@ -69,7 +73,7 @@ qemu-system-x86_64 $IMG \
 	-cpu host \
 	-smp cores=2,threads=2,sockets=1,maxcpus=4 \
 	-display sdl \
-	-device qxl-vga,xres=1920,yres=1080 \
+	-device virtio-vga,edid=on,xres=1920,yres=1080 \
 	-full-screen \
 	-device virtio-net,netdev=net0 \
 	-netdev user,id=net0,hostfwd=tcp::2222-:22 \
@@ -77,7 +81,4 @@ qemu-system-x86_64 $IMG \
 	-device virtio-serial -chardev spicevmc,id=spicechannel0,name=vdagent \
 	-fsdev local,security_model=mapped,id=fsdev0,path="/var/cache/pacman/pkg" \
 	-device virtio-9p-pci,id=fs0,fsdev=fsdev0,mount_tag=pkg \
-	$BIOS 
-
-# Replace QXL by... if possible :
-# -device virtio-vga,edid=on,xres=1920,yres=1080 \
+	$BIOS
