@@ -1,0 +1,6 @@
+archlivesystem:
+  hosts:
+    currentvm:
+      ansible_host: localhost
+      ssh_port: 2222
+

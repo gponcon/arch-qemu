@@ -72,7 +72,7 @@ qemu-system-x86_64 $IMG \
 	-accel kvm \
 	-cpu host \
 	-smp cores=2,threads=2,sockets=1,maxcpus=4 \
-	-display sdl \
+	-display gtk \
 	-device virtio-vga,edid=on,xres=1920,yres=1080 \
 	-full-screen \
 	-device virtio-net,netdev=net0 \

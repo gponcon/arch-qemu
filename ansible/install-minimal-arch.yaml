@@ -1,0 +1,27 @@
+- name: Arch Minimal Installation
+  hosts: archlivesystem
+  tasks: 
+    - name: Setting user to root and ssh port to 2222
+      set_fact:
+        ansible_ssh_user: 'root'
+        ansible_port: 2222
+    - name: Arch host exists ?
+      ansible.builtin.ping:
+    - name: Is archiso ?
+      ansible.builtin.command: cat /etc/hostname
+      register: ret
+      failed_when: 
+        - ret.rc != 0
+        - ret.stdout is not 'archiso'
+    - name: Has internet ?
+      ansible.builtin.shell: ping -c 1 -W 3 -q archlinux.org > /dev/null
+      register: ret
+      failed_when: 
+        - ret.rc != 0
+    - name: Has active NTP service ?
+      ansible.builtin.shell: timedatectl | grep "NTP service"
+      register: ret
+      failed_when: 
+        - ret.rc != 0
+        - ret.stdout not contains "active"
+
