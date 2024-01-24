@@ -1,5 +1,10 @@
 vms/*
 !vms/example.sh
+!vms/standalone
+**/*.qcow*
+**/*.fd
+**/*.gz
+**/*.tgz
 iso/*
 !iso/README.md
 pkg/*
