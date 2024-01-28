@@ -1,5 +1,8 @@
 #!/bin/sh
 
+OVMF_VARS_FILE='OVMF_VARS.fd'
+OVMF_CODE_FILE='OVMF_CODE.fd'
+
 if [ "$1" == "--reset" -a -d archadv ] ;then
   echo "Reset arch advanced VM..."
   rm -rf archadv
@@ -22,10 +25,11 @@ fi
 if [ ! -f archadv/archadv5.qcow ] ;then
   qemu-img create -f qcow2 archadv/archadv5.qcow 1T
 fi
-if [ ! -f archadv/OVMF_CODE.secboot.4m.fd -o ! -f archadv/OVMF_VARS.4m.fd ] ;then
-  cp /usr/share/edk2/x64/OVMF_CODE.secboot.4m.fd archadv/
-  cp /usr/share/edk2/x64/OVMF_VARS.4m.fd archadv/
+if [ ! -f archadv/$OVMF_VARS_FILE ] ;then
+  cp /usr/share/edk2/x64/$OVMF_VARS_FILE archadv/
 fi
+
+sudo cpupower frequency-set -g performance
 
 qemu-system-x86_64 -boot order=d,menu=on -cdrom ~/src/arch-qemu/iso/archlinux-2024.01.01-x86_64.iso \
 	-m 8G \
@@ -46,5 +50,5 @@ qemu-system-x86_64 -boot order=d,menu=on -cdrom ~/src/arch-qemu/iso/archlinux-20
 	-device virtio-9p-pci,id=fs0,fsdev=fsdev0,mount_tag=pkg \
 	-machine pc-q35-2.5 \
 	-device intel-iommu \
-	-drive if=pflash,format=raw,readonly=on,file=archadv/OVMF_CODE.secboot.4m.fd \
-	-drive if=pflash,format=raw,file=archadv/OVMF_VARS.4m.fd
+	-drive if=pflash,format=raw,readonly=on,file=/usr/share/edk2/x64/$OVMF_CODE_FILE \
+	-drive if=pflash,format=raw,file=archadv/$OVMF_VARS_FILE
