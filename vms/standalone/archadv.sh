@@ -29,8 +29,6 @@ if [ ! -f archadv/$OVMF_VARS_FILE ] ;then
   cp /usr/share/edk2/x64/$OVMF_VARS_FILE archadv/
 fi
 
-sudo cpupower frequency-set -g performance
-
 qemu-system-x86_64 -boot order=d,menu=on -cdrom ~/src/arch-qemu/iso/archlinux-2024.01.01-x86_64.iso \
 	-m 8G \
 	-accel kvm \
